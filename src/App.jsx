@@ -37,6 +37,10 @@ function App() {
       )
     );
   };
+  // setTodos((prevTodos) => {
+  //   const updated = prevTodos.filter((todo) => todo.id !== id);
+  //   return updated;
+  // });
 
   const deleteTodo = (id) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
@@ -46,10 +50,13 @@ function App() {
     setTodos((prev) => prev.filter((todo) => !todo.completed));
   };
 
-  // setTodos((prevTodos) => {
-  //   const updated = prevTodos.filter((todo) => todo.id !== id);
-  //   return updated;
-  // });
+  const updateTodo = (id, newText) => {
+    const text = newText.trim();
+    if (!text) return; // ignore empty saves
+    setTodos((prev) =>
+      prev.map((todo) => (todo.id === id ? { ...todo, text } : todo))
+    );
+  };
 
   // Apply the selected filter
   const filteredTodos = todos.filter(FILTERS[filter]);
@@ -126,6 +133,7 @@ function App() {
           todos={filteredTodos}
           onToggle={toggleTodo}
           onDelete={deleteTodo}
+          onUpdate={updateTodo}
         />
       </div>
     </div>
