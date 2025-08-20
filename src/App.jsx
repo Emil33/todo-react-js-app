@@ -42,6 +42,10 @@ function App() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
+  const deleteCompleted = () => {
+    setTodos((prev) => prev.filter((todo) => !todo.completed));
+  };
+
   // setTodos((prevTodos) => {
   //   const updated = prevTodos.filter((todo) => todo.id !== id);
   //   return updated;
@@ -49,8 +53,8 @@ function App() {
 
   // Apply the selected filter
   const filteredTodos = todos.filter(FILTERS[filter]);
-
   const activeCount = todos.filter((todo) => !todo.completed).length;
+  const hasCompleted = todos.some((todo) => todo.completed); //Check if there are any completed tasks
 
   return (
     <div className="min-h-screen bg-gradient-to-b to-slate-100 py-10 px-4">
@@ -92,6 +96,17 @@ function App() {
               );
             })}
           </div>
+
+          <button
+            type="button"
+            onClick={deleteCompleted}
+            disabled={!hasCompleted}
+            className={
+              "ml-2 text-xs font-medium rounded-lg border px-3 py-1.5 transition border-red-200 text-red-600 hover:bg-red-50 active:scale-[0.99] disabled:border-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+            }
+          >
+            Clear Completed
+          </button>
 
           {/* Task State Counts*/}
           <div className="flex gap-2 text-xs text-slate-500">
