@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AddTodo from "./components/AddTodo";
 import TodoList from "./components/TodoList";
+import { DragDropContext } from "@hello-pangea/dnd";
 
 const FILTERS = {
   all: () => true,
@@ -21,6 +22,16 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+  // Helpers
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const splicedArray = result.splice(startIndex, 1);
+    const moved = splicedArray[0];
+    result.splice(endIndex, 0, moved);
+    return result;
+  };
+
+  // Action handlers
   const addTodo = (text) => {
     const newTodo = {
       id: Date.now(),
@@ -58,8 +69,32 @@ function App() {
     );
   };
 
-  // Apply the selected filter
-  const filteredTodos = todos.filter(FILTERS[filter]);
+  const handleDragEnd = (result) => {
+    console.log(result.source.index, "->", result.destination?.index);
+    const { source, destination } = result;
+    if (!destination) return; // dropped outside list
+    if (source.index === destination.index) return; // no change
+
+    setTodos((prev) => {
+      // Build the *current* visible slice from prev using the active filter
+      const visible = prev.filter(FILTERS[filter]);
+      const reorderedVisible = reorder(
+        visible,
+        source.index,
+        destination.index
+      );
+
+      // Put the reordered visible items back into their original slots,
+      // while leaving non-visible (hidden by filter) items untouched.
+      const visibleIds = new Set(visible.map((t) => t.id));
+      let visIdx = 0;
+      return prev.map((t) =>
+        visibleIds.has(t.id) ? reorderedVisible[visIdx++] : t
+      );
+    });
+  };
+
+  const filteredTodos = todos.filter(FILTERS[filter]); // Apply the selected filter
   const activeCount = todos.filter((todo) => !todo.completed).length;
   const hasCompleted = todos.some((todo) => todo.completed); //Check if there are any completed tasks
 
@@ -129,12 +164,20 @@ function App() {
           </div>
         </div>
 
-        <TodoList
-          todos={filteredTodos}
-          onToggle={toggleTodo}
-          onDelete={deleteTodo}
-          onUpdate={updateTodo}
-        />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <TodoList
+            todos={filteredTodos}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onUpdate={updateTodo}
+          />
+        </DragDropContext>
+
+        <div className="mt-6 text-center text-xs text-slate-400">
+          <span className="inline-block px-2 py-1 rounded bg-slate-50 border border-slate-200">
+            Drag items by the handle to reorder
+          </span>
+        </div>
       </div>
     </div>
   );

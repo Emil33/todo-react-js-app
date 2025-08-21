@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 
-function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
+function TodoItem({
+  todo,
+  onToggle,
+  onDelete,
+  onUpdate,
+  dragRef,
+  dragProps,
+  dragHandleProps,
+  isDragging,
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(todo.text);
   const inputRef = useRef(null);
@@ -46,12 +55,39 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   };
 
   return (
-    <li className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+    // <li className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+    <li
+      ref={dragRef}
+      {...dragProps}
+      className={`flex items-center gap-3 rounded-xl border bg-white px-4 py-3 shadow-sm ${
+        isDragging ? "border-blue-300 ring-2 ring-blue-200" : "border-slate-200"
+      }`}
+    >
+      {/* Drag handle (disabled while editing) */}
+      <div
+        {...dragHandleProps}
+        role="button"
+        aria-label="Drag to reorder"
+        title="Drag to reorder"
+        aria-disabled={isEditing}
+        className={`text-slate-400 hover:text-slate-600 ${
+          isEditing
+            ? "cursor-not-allowed opacity-40"
+            : "cursor-grab active:cursor-grabbing"
+        }`}
+        style={{ pointerEvents: isEditing ? "none" : undefined }}
+      >
+        <span className="grid leading-none select-none">
+          <span>⋮⋮</span>
+          <span>⋮⋮</span>
+        </span>
+      </div>
+
       <input
         type="checkbox"
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
-        className="h-5 w-5 accent-blue-6 cursor-pointer"
+        className="h-5 w-5 accent-blue-600 cursor-pointer"
       />
       {!isEditing ? (
         <button
@@ -71,7 +107,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
           onChange={(e) => setDraft(e.target.value)}
           onBlur={save}
           onKeyDown={onKeyDown}
-          className="flex-1 rounded-md border border-slate-300 ..."
+          className="flex-1 rounded-md border border-slate-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       )}
       <button
