@@ -59,7 +59,7 @@ function TodoItem({
     <li
       ref={dragRef}
       {...dragProps}
-      className={`flex items-center gap-3 rounded-xl border bg-white px-4 py-3 shadow-sm ${
+      className={`flex items-center gap-2 sm:gap-3 rounded-xl border bg-white px-3 sm:px-4 py-3 shadow-sm ${
         isDragging ? "border-blue-300 ring-2 ring-blue-200" : "border-slate-200"
       }`}
     >
@@ -93,7 +93,7 @@ function TodoItem({
         <button
           type="button"
           onDoubleClick={startEdit}
-          className={`flex-1 text-left truncate ${
+          className={`flex-1 text-left truncate text-sm sm:text-base ${
             todo.completed ? "line-through text-slate-400" : "text-slate-800"
           }`}
           title="Double-click to edit"
@@ -112,7 +112,7 @@ function TodoItem({
       )}
       <button
         onClick={() => onDelete(todo.id)}
-        className="text-red-600 hover:text-red-700 text-sm font-medium"
+        className="text-red-600 hover:text-red-700 text-xs sm:text-sm font-medium"
       >
         Delete
       </button>

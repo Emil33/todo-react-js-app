@@ -99,25 +99,27 @@ function App() {
   const hasCompleted = todos.some((todo) => todo.completed); //Check if there are any completed tasks
 
   return (
-    <div className="min-h-screen bg-gradient-to-b to-slate-100 py-10 px-4">
-      <div className="max-w-xl mx-auto bg-white shadow-lg rounded-2xl p-6 border-slate-100">
-        <h1 className="text-2xl font-bold mb-4 text-center text-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-6 px-3 sm:py-10 sm:px-4">
+      <div className="mx-auto w-full max-w-lg md:max-w-2xl bg-white shadow-lg rounded-2xl p-4 sm:p-6 md:p-8 border border-slate-100">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 text-center text-gray-800">
           Smart To-Do Manager
         </h1>
         <ul></ul>
-        <p className="text-center text-slate-500 mb-6">
+        <p className="text-center text-slate-500 mb-4 sm:mb-6 text-sm sm:text-base">
           {activeCount === 0
             ? "Nothing pending"
             : `${activeCount} ${activeCount > 1 ? "tasks" : "task"} pending`}
         </p>
         <AddTodo onAdd={addTodo} />
-
         <div
           role="tablist"
           aria-label="Filter tasks"
-          className="mb-4 flex items-center justify-between gap-2 flex-wrap"
+          className="mb-4 md:mb-6
+            grid gap-3
+            grid-cols-1
+            sm:grid-cols-[1fr_auto] sm:auto-rows-min sm:items-center"
         >
-          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1">
+          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 sm:col-start-1 sm:row-start-1">
             {["all", "active", "completed"].map((key) => {
               const isActive = filter === key;
               return (
@@ -138,20 +140,21 @@ function App() {
               );
             })}
           </div>
-
           <button
             type="button"
             onClick={deleteCompleted}
             disabled={!hasCompleted}
-            className={
-              "ml-2 text-xs font-medium rounded-lg border px-3 py-1.5 transition border-red-200 text-red-600 hover:bg-red-50 active:scale-[0.99] disabled:border-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
-            }
+            className="sm:col-start-2 sm:row-start-1 sm:justify-self-end sm:self-start
+              shrink-0
+              text-xs sm:text-sm font-medium rounded-lg border px-3 py-1.5 transition
+              border-red-200 text-red-600 hover:bg-red-50 active:scale-[0.99]
+              disabled:border-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
+              h-[41px]"
           >
             Clear Completed
           </button>
-
           {/* Task State Counts*/}
-          <div className="flex gap-2 text-xs text-slate-500">
+          <div className="flex flex-wrap gap-2 text-[11px] sm:text-xs text-slate-500 sm:col-start-1 sm:row-start-2">
             <span className="px-2 py-1 rounded bg-slate-50 border border-slate-200">
               All: {todos.length}
             </span>
@@ -163,7 +166,6 @@ function App() {
             </span>
           </div>
         </div>
-
         <DragDropContext onDragEnd={handleDragEnd}>
           <TodoList
             todos={filteredTodos}
@@ -172,7 +174,6 @@ function App() {
             onUpdate={updateTodo}
           />
         </DragDropContext>
-
         <div className="mt-6 text-center text-xs text-slate-400">
           <span className="inline-block px-2 py-1 rounded bg-slate-50 border border-slate-200">
             Drag items by the handle to reorder

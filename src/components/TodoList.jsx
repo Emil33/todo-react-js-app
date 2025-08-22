@@ -12,7 +12,7 @@ function TodoList({ todos, onToggle, onDelete, onUpdate }) {
           ref={provided.innerRef}
           {...provided.droppableProps}
           className={`space-y-2 transition ${
-            snapshot.isDraggingOver ? "bg-slate-50 p-2 rounded-xl" : ""
+            snapshot.isDraggingOver ? "bg-slate-50 p-2 sm:p-3 rounded-xl" : ""
           }`}
         >
           {todos.map((todo, index) => (
